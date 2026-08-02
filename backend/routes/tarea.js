@@ -2,7 +2,6 @@ const express = require('express');
 const router = express.Router();
 const Tarea = require('../models/tareaModel');
 
-// GET - Obtener todas las tareas
 router.get('/tareas', async (req, res, next) => {
   try {
     const tareas = await Tarea.find();
@@ -12,7 +11,6 @@ router.get('/tareas', async (req, res, next) => {
   }
 });
 
-// GET - Obtener una tarea por ID
 router.get('/tareas/:id', async (req, res, next) => {
   try {
     const tarea = await Tarea.findById(req.params.id);
@@ -23,7 +21,6 @@ router.get('/tareas/:id', async (req, res, next) => {
   }
 });
 
-// POST - Crear una tarea
 router.post('/tareas', async (req, res, next) => {
   try {
     const nuevaTarea = await Tarea.create(req.body);
@@ -34,7 +31,6 @@ router.post('/tareas', async (req, res, next) => {
   }
 });
 
-// PUT - Actualizar una tarea
 router.put('/tareas/:id', async (req, res, next) => {
   try {
     const tareaActualizada = await Tarea.findByIdAndUpdate(req.params.id, req.body, { new: true, runValidators: true });
@@ -46,7 +42,6 @@ router.put('/tareas/:id', async (req, res, next) => {
   }
 });
 
-// DELETE - Eliminar una tarea
 router.delete('/tareas/:id', async (req, res, next) => {
   try {
     const tareaEliminada = await Tarea.findByIdAndDelete(req.params.id);
@@ -57,7 +52,6 @@ router.delete('/tareas/:id', async (req, res, next) => {
   }
 });
 
-// PUT - Marcar tarea como completada
 router.put('/tareas/:id/completar', async (req, res, next) => {
   try {
     const tarea = await Tarea.findById(req.params.id);
@@ -70,7 +64,6 @@ router.put('/tareas/:id/completar', async (req, res, next) => {
   }
 });
 
-// GET - Obtener tareas por prioridad
 router.get('/tareas/prioridad/:nivel', async (req, res, next) => {
   try {
     const { nivel } = req.params;
@@ -85,7 +78,6 @@ router.get('/tareas/prioridad/:nivel', async (req, res, next) => {
   }
 });
 
-// GET - Obtener tareas próximas a vencer
 router.get('/tareas/proximas-vencer/:dias', async (req, res, next) => {
   try {
     const dias = parseInt(req.params.dias);
