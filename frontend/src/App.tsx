@@ -1,11 +1,17 @@
-import { Container } from "react-bootstrap";
-import ListaTareas from "./components/ListaTareas/ListaTareas";
+import { Routes, Route } from "react-router-dom";
+import BarraNavegacion from "./components/BarraNavegacion/BarraNavegacion";
+import PaginaInicio from "./pages/PaginaInicio";
+import PaginaTareas from "./pages/PaginaTareas";
 
 function App() {
   return (
-    <Container className="py-5">
-      <ListaTareas />
-    </Container>
+    <>
+      <BarraNavegacion />
+      <Routes>
+        <Route path="/" element={<PaginaInicio />} />
+        <Route path="/tareas" element={<PaginaTareas />} />
+      </Routes>
+    </>
   );
 }
 
