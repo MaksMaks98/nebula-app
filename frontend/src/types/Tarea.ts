@@ -13,3 +13,10 @@ export type Tarea = {
   createdAt: string; // los agrega timestamps: true
   updatedAt: string;
 };
+
+// Lo que maneja el formulario de alta y edición
+export type TareaFormulario = Pick<Tarea, "titulo" | "prioridad" | "completada"> & {
+  descripcion: string; // "" si no tiene
+  fechaLimite: string; // "AAAA-MM-DD", o "" si no tiene
+  etiquetas: string; // "facultad, urgente": se convierte en array al enviar
+};
