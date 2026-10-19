@@ -20,3 +20,8 @@ export type TareaFormulario = Pick<Tarea, "titulo" | "prioridad" | "completada">
   fechaLimite: string; // "AAAA-MM-DD", o "" si no tiene
   etiquetas: string; // "facultad, urgente": se convierte en array al enviar
 };
+// Los filtros de la lista, que usan tus endpoints de negocio
+export type FiltrosTareas = {
+  prioridad: "" | Prioridad; // "" = todas
+  dias: string; // lo que se escribe en el input; "" = sin filtro de vencimiento
+};
