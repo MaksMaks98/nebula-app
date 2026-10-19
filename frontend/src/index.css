@@ -1,5 +1,274 @@
+/* ==========================================================================
+   Nebula: paleta, temas y estética gradient blur
+   Bootstrap 5.3 cambia de tema con data-bs-theme en <html> (ver useTema).
+   Acá se redefinen sus variables, así los componentes no se tocan.
+   ========================================================================== */
+
+/* ---------- Tema claro (también el valor por defecto) ---------- */
+:root,
+[data-bs-theme="light"] {
+  /* Acentos (en "r, g, b" para poder usarlos con transparencia) */
+  --nb-azul-rgb: 63, 94, 232;
+  --nb-violeta-rgb: 109, 62, 240;
+  --nb-magenta-rgb: 214, 64, 159;
+  --nb-coral-rgb: 212, 80, 43;
+  --nb-ambar-rgb: 224, 154, 62;
+  --nb-cian-rgb: 14, 116, 144;
+
+  /* Base */
+  --nb-fondo: #eef2fa;
+  --nb-superficie: rgba(255, 255, 255, 0.6);
+  --nb-campo: rgba(255, 255, 255, 0.7);
+  --nb-borde: rgba(27, 33, 64, 0.08);
+  --nb-texto: #1b2140;
+  --nb-texto-rgb: 27, 33, 64;
+  --nb-texto-secundario-rgb: 91, 99, 131;
+  --nb-sobre-acento: #ffffff; /* texto sobre un botón de color */
+
+  /* Fondo difuminado: pasteles como en la foto de las flores */
+  --nb-fondo-opacidad: 0.55;
+  --nb-fondo-gradiente:
+    radial-gradient(circle at 12% 18%, rgba(90, 209, 240, 0.7), transparent 38%),
+    radial-gradient(circle at 88% 12%, rgba(160, 123, 255, 0.55), transparent 40%),
+    radial-gradient(circle at 78% 88%, rgba(255, 194, 122, 0.7), transparent 42%),
+    radial-gradient(circle at 18% 85%, rgba(240, 101, 196, 0.45), transparent 40%);
+}
+
+/* ---------- Tema oscuro ---------- */
+[data-bs-theme="dark"] {
+  --nb-azul-rgb: 108, 140, 255;
+  --nb-violeta-rgb: 160, 123, 255;
+  --nb-magenta-rgb: 240, 101, 196;
+  --nb-coral-rgb: 255, 122, 89;
+  --nb-ambar-rgb: 255, 194, 122;
+  --nb-cian-rgb: 90, 209, 240;
+
+  --nb-fondo: #070a14;
+  --nb-superficie: rgba(20, 25, 45, 0.55);
+  --nb-campo: rgba(10, 14, 28, 0.6);
+  --nb-borde: rgba(255, 255, 255, 0.08);
+  --nb-texto: #e8eaf6;
+  --nb-texto-rgb: 232, 234, 246;
+  --nb-texto-secundario-rgb: 154, 163, 199;
+  --nb-sobre-acento: #070a14;
+
+  /* Fondo difuminado: azules y violetas de galaxia, con un toque coral */
+  --nb-fondo-opacidad: 0.35;
+  --nb-fondo-gradiente:
+    radial-gradient(circle at 15% 20%, rgba(108, 140, 255, 0.75), transparent 40%),
+    radial-gradient(circle at 85% 15%, rgba(160, 123, 255, 0.6), transparent 38%),
+    radial-gradient(circle at 75% 85%, rgba(255, 122, 89, 0.45), transparent 40%),
+    radial-gradient(circle at 20% 80%, rgba(90, 209, 240, 0.5), transparent 38%);
+}
+
+/* ---------- Variables de Bootstrap, iguales para los dos temas ---------- */
+:root,
+[data-bs-theme="light"],
+[data-bs-theme="dark"] {
+  --bs-body-font-family: "Inter Variable", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --bs-body-bg: var(--nb-fondo);
+  --bs-body-color: var(--nb-texto);
+  --bs-body-color-rgb: var(--nb-texto-rgb);
+  --bs-emphasis-color-rgb: var(--nb-texto-rgb);
+  --bs-secondary-color: rgb(var(--nb-texto-secundario-rgb));
+  --bs-border-color: var(--nb-borde);
+  --bs-border-color-translucent: var(--nb-borde);
+  --bs-border-radius: 0.75rem;
+  --bs-border-radius-lg: 1rem;
+
+  /* Colores semánticos que ya usa el código */
+  --bs-primary-rgb: var(--nb-azul-rgb);
+  --bs-secondary-rgb: var(--nb-texto-secundario-rgb);
+  --bs-danger-rgb: var(--nb-coral-rgb);
+  --bs-success-rgb: var(--nb-cian-rgb);
+  --bs-info-rgb: var(--nb-violeta-rgb);
+  --bs-warning-rgb: var(--nb-ambar-rgb);
+
+  --bs-link-color: rgb(var(--nb-azul-rgb));
+  --bs-link-color-rgb: var(--nb-azul-rgb);
+  --bs-link-hover-color: rgb(var(--nb-violeta-rgb));
+  --bs-link-hover-color-rgb: var(--nb-violeta-rgb);
+}
+
+/* ---------- Base ---------- */
 body {
   margin: 0;
   min-height: 100vh;
-  background-color: #f8f9fa;
+}
+
+/* El fondo difuminado: una capa fija detrás de todo el contenido */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background: var(--nb-fondo-gradiente);
+  filter: blur(70px);
+  opacity: var(--nb-fondo-opacidad);
+}
+
+h1,
+h2,
+h3,
+.display-4,
+.display-5 {
+  letter-spacing: -0.02em;
+}
+
+/* Texto con el degradado de la nebulosa (marca y título de inicio) */
+.nb-texto-gradiente {
+  background: linear-gradient(
+    120deg,
+    rgb(var(--nb-azul-rgb)),
+    rgb(var(--nb-violeta-rgb)) 50%,
+    rgb(var(--nb-magenta-rgb))
+  );
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+}
+
+/* ---------- Superficies de vidrio ---------- */
+.card {
+  --bs-card-bg: var(--nb-superficie);
+  --bs-card-border-color: var(--nb-borde);
+  --bs-card-cap-bg: transparent;
+  backdrop-filter: blur(16px);
+}
+
+.modal-content {
+  --bs-modal-bg: var(--nb-superficie);
+  --bs-modal-border-color: var(--nb-borde);
+  backdrop-filter: blur(24px);
+}
+
+.nb-navbar {
+  background: var(--nb-superficie);
+  border-bottom: 1px solid var(--nb-borde);
+  backdrop-filter: blur(16px);
+}
+
+.form-control,
+.form-select {
+  background-color: var(--nb-campo);
+}
+
+/* ---------- Botones ---------- */
+/* Bootstrap no deriva los botones de --bs-primary-rgb: se redefinen sus variables */
+.btn-primary {
+  --nb-btn: var(--nb-azul-rgb);
+}
+.btn-danger {
+  --nb-btn: var(--nb-coral-rgb);
+}
+
+.btn-primary,
+.btn-danger {
+  --bs-btn-color: var(--nb-sobre-acento);
+  --bs-btn-bg: rgb(var(--nb-btn));
+  --bs-btn-border-color: rgb(var(--nb-btn));
+  --bs-btn-hover-color: var(--nb-sobre-acento);
+  --bs-btn-hover-bg: rgba(var(--nb-btn), 0.85);
+  --bs-btn-hover-border-color: rgba(var(--nb-btn), 0.85);
+  --bs-btn-active-color: var(--nb-sobre-acento);
+  --bs-btn-active-bg: rgba(var(--nb-btn), 0.75);
+  --bs-btn-active-border-color: rgba(var(--nb-btn), 0.75);
+  --bs-btn-disabled-color: var(--nb-sobre-acento);
+  --bs-btn-disabled-bg: rgb(var(--nb-btn));
+  --bs-btn-disabled-border-color: rgb(var(--nb-btn));
+  --bs-btn-focus-shadow-rgb: var(--nb-btn);
+}
+
+/* El secundario ("Cancelar") es un botón fantasma */
+.btn-secondary {
+  --bs-btn-color: var(--nb-texto);
+  --bs-btn-bg: rgba(var(--nb-texto-secundario-rgb), 0.12);
+  --bs-btn-border-color: transparent;
+  --bs-btn-hover-color: var(--nb-texto);
+  --bs-btn-hover-bg: rgba(var(--nb-texto-secundario-rgb), 0.22);
+  --bs-btn-hover-border-color: transparent;
+  --bs-btn-active-color: var(--nb-texto);
+  --bs-btn-active-bg: rgba(var(--nb-texto-secundario-rgb), 0.3);
+  --bs-btn-active-border-color: transparent;
+  --bs-btn-focus-shadow-rgb: var(--nb-texto-secundario-rgb);
+}
+
+.btn-outline-primary {
+  --nb-btn: var(--nb-azul-rgb);
+}
+.btn-outline-secondary {
+  --nb-btn: var(--nb-texto-secundario-rgb);
+}
+.btn-outline-success {
+  --nb-btn: var(--nb-cian-rgb);
+}
+.btn-outline-danger {
+  --nb-btn: var(--nb-coral-rgb);
+}
+
+.btn-outline-primary,
+.btn-outline-secondary,
+.btn-outline-success,
+.btn-outline-danger {
+  --bs-btn-color: rgb(var(--nb-btn));
+  --bs-btn-border-color: rgba(var(--nb-btn), 0.4);
+  --bs-btn-hover-color: var(--nb-sobre-acento);
+  --bs-btn-hover-bg: rgb(var(--nb-btn));
+  --bs-btn-hover-border-color: rgb(var(--nb-btn));
+  --bs-btn-active-color: var(--nb-sobre-acento);
+  --bs-btn-active-bg: rgb(var(--nb-btn));
+  --bs-btn-active-border-color: rgb(var(--nb-btn));
+  --bs-btn-focus-shadow-rgb: var(--nb-btn);
+}
+
+/* ---------- Badges suaves ---------- */
+/* Fondo del acento con poca opacidad y texto del mismo acento */
+.badge[class*="bg-"] {
+  --bs-bg-opacity: 0.16;
+  font-weight: 600;
+}
+.badge.bg-primary {
+  color: rgb(var(--nb-azul-rgb));
+}
+.badge.bg-secondary {
+  color: rgb(var(--nb-texto-secundario-rgb));
+}
+.badge.bg-danger {
+  color: rgb(var(--nb-coral-rgb));
+}
+.badge.bg-success {
+  color: rgb(var(--nb-cian-rgb));
+}
+.badge.bg-info {
+  color: rgb(var(--nb-violeta-rgb));
+}
+.badge.bg-warning {
+  color: rgb(var(--nb-ambar-rgb));
+}
+
+/* ---------- Botón de tema ---------- */
+.nb-boton-tema {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  padding: 0;
+  border: 1px solid var(--nb-borde);
+  border-radius: 50%;
+  background: transparent;
+  color: var(--nb-texto);
+  font-size: 1.1rem;
+  line-height: 1;
+  transition: background-color 0.15s ease-in-out;
+}
+
+.nb-boton-tema:hover {
+  background: rgba(var(--nb-texto-secundario-rgb), 0.15);
+}
+
+.nb-boton-tema:focus-visible {
+  outline: 2px solid rgb(var(--nb-azul-rgb));
+  outline-offset: 2px;
 }
