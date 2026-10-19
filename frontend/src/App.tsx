@@ -2,6 +2,8 @@ import { Routes, Route } from "react-router-dom";
 import BarraNavegacion from "./components/BarraNavegacion/BarraNavegacion";
 import PaginaInicio from "./pages/PaginaInicio";
 import PaginaTareas from "./pages/PaginaTareas";
+import PaginaDetalleTarea from "./pages/PaginaDetalleTarea";
+import PaginaNoEncontrada from "./pages/PaginaNoEncontrada";
 
 function App() {
   return (
@@ -10,6 +12,8 @@ function App() {
       <Routes>
         <Route path="/" element={<PaginaInicio />} />
         <Route path="/tareas" element={<PaginaTareas />} />
+        <Route path="/tareas/:id" element={<PaginaDetalleTarea />} />
+        <Route path="*" element={<PaginaNoEncontrada />} />
       </Routes>
     </>
   );
