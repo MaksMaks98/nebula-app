@@ -28,10 +28,10 @@
   /* Fondo difuminado: pasteles como en la foto de las flores */
   --nb-fondo-opacidad: 0.55;
   --nb-fondo-gradiente:
-    radial-gradient(circle at 12% 18%, rgba(90, 209, 240, 0.7), transparent 38%),
-    radial-gradient(circle at 88% 12%, rgba(160, 123, 255, 0.55), transparent 40%),
-    radial-gradient(circle at 78% 88%, rgba(255, 194, 122, 0.7), transparent 42%),
-    radial-gradient(circle at 18% 85%, rgba(240, 101, 196, 0.45), transparent 40%);
+    radial-gradient(circle at 12% 18%, rgba(90, 209, 240, 0.7), transparent 60%),
+    radial-gradient(circle at 88% 12%, rgba(160, 123, 255, 0.55), transparent 62%),
+    radial-gradient(circle at 78% 88%, rgba(255, 194, 122, 0.7), transparent 64%),
+    radial-gradient(circle at 18% 85%, rgba(240, 101, 196, 0.45), transparent 62%);
 }
 
 /* ---------- Tema oscuro ---------- */
@@ -55,10 +55,10 @@
   /* Fondo difuminado: azules y violetas de galaxia, con un toque coral */
   --nb-fondo-opacidad: 0.35;
   --nb-fondo-gradiente:
-    radial-gradient(circle at 15% 20%, rgba(108, 140, 255, 0.75), transparent 40%),
-    radial-gradient(circle at 85% 15%, rgba(160, 123, 255, 0.6), transparent 38%),
-    radial-gradient(circle at 75% 85%, rgba(255, 122, 89, 0.45), transparent 40%),
-    radial-gradient(circle at 20% 80%, rgba(90, 209, 240, 0.5), transparent 38%);
+    radial-gradient(circle at 15% 20%, rgba(108, 140, 255, 0.75), transparent 62%),
+    radial-gradient(circle at 85% 15%, rgba(160, 123, 255, 0.6), transparent 60%),
+    radial-gradient(circle at 75% 85%, rgba(255, 122, 89, 0.45), transparent 62%),
+    radial-gradient(circle at 20% 80%, rgba(90, 209, 240, 0.5), transparent 60%);
 }
 
 /* ---------- Variables de Bootstrap, iguales para los dos temas ---------- */
@@ -96,7 +96,8 @@ body {
   min-height: 100vh;
 }
 
-/* El fondo difuminado: una capa fija detrás de todo el contenido */
+/* El fondo difuminado: una capa fija detrás de todo el contenido.
+   Los degradados radiales ya son suaves: sin filter: blur, que es caro para la GPU */
 body::before {
   content: "";
   position: fixed;
@@ -104,7 +105,6 @@ body::before {
   z-index: -1;
   pointer-events: none;
   background: var(--nb-fondo-gradiente);
-  filter: blur(70px);
   opacity: var(--nb-fondo-opacidad);
 }
 
@@ -134,7 +134,6 @@ h3,
   --bs-card-bg: var(--nb-superficie);
   --bs-card-border-color: var(--nb-borde);
   --bs-card-cap-bg: transparent;
-  backdrop-filter: blur(16px);
 }
 
 .modal-content {
