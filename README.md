@@ -119,9 +119,21 @@ curl -X POST http://localhost:3000/api/tareas \
 
 Interfaz en React 19 + TypeScript + Vite que consume la API REST de Nebula (`/api/tareas`):
 ABM completo de tareas, marcar como completada y reabrir, y filtros por prioridad y
-por vencimiento.
+por vencimiento. La página de inicio muestra las tareas como un **mapa de estrellas**
+sobre una nebulosa animada, y toda la app tiene **tema claro y oscuro**.
+
 
 **Stack:** react-bootstrap, axios, React Router, Formik + Yup.
+### Diseño
+
+- **Tema claro y oscuro:** al abrir la app sigue el tema del sistema. Se cambia con el
+  botón de la barra de navegación y la elección se recuerda entre visitas.
+- **Mapa de estrellas (`/`):** cada tarea es una estrella. El tamaño depende de la
+  prioridad (alta, media o baja), las completadas se ven apagadas, el título aparece
+  al pasar el mouse y un click abre el detalle. Cada estrella queda siempre en el
+  mismo lugar, calculado a partir del `_id` de la tarea.
+- **Fondo de nebulosa:** degradados difusos con animación suave. Si el sistema pide
+  movimiento reducido, las animaciones se desactivan.
 
 ### Cómo correrlo en local
 
@@ -150,7 +162,7 @@ por vencimiento.
 
 | Ruta          | Página                                                    |
 |---------------|-----------------------------------------------------------|
-| `/`           | Inicio                                                    |
+| `/`           | Inicio: mapa de estrellas con las tareas                  |
 | `/tareas`     | Listado, alta, edición, baja, completar/reabrir y filtros |
 | `/tareas/:id` | Detalle de una tarea                                      |
 | `*`           | Página no encontrada (404)                                |
@@ -159,6 +171,7 @@ por vencimiento.
 
 - `src/types`: forma de los datos (`Tarea`, `TareaFormulario`, `FiltrosTareas`)
 - `src/services`: una función por endpoint de la API, con axios
-- `src/components`: lista, tarjeta, filtros y modales
+- `src/hooks`: `useTema`, el tema claro/oscuro
+- `src/components`: lista, tarjeta, filtros, modales, nebulosa de fondo y mapa de estrellas
 - `src/pages`: Inicio, Tareas, Detalle y 404
-- `src/utils`: formato de fechas y colores por prioridad
+- `src/utils`: formato de fechas, colores por prioridad y posición de las estrellas

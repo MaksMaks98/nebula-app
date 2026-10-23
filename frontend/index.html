@@ -5,6 +5,20 @@
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Nebula</title>
+    <script>
+      // Aplica el tema antes del primer pintado, para que no destelle al recargar.
+      // Misma lógica que src/hooks/useTema.ts
+      (function () {
+        var tema = null;
+        try {
+          tema = localStorage.getItem("nebula-tema");
+        } catch (e) {}
+        if (tema !== "claro" && tema !== "oscuro") {
+          tema = matchMedia("(prefers-color-scheme: dark)").matches ? "oscuro" : "claro";
+        }
+        document.documentElement.setAttribute("data-bs-theme", tema === "oscuro" ? "dark" : "light");
+      })();
+    </script>
   </head>
   <body>
     <div id="root"></div>
