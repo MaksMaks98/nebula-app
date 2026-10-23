@@ -1,0 +1,338 @@
+/* ==========================================================================
+   Página de inicio: nebulosa animada y mapa de estrellas (una por tarea)
+   Rendimiento: nada de filter ni backdrop-filter; solo se animan
+   transform y opacity, que el navegador compone sin volver a dibujar.
+   ========================================================================== */
+
+/* ---------- Colores de la nebulosa, por tema ---------- */
+/* Misma paleta que el resto de la app (azul, violeta, cian, magenta y
+   toques de ámbar y coral): solo cambia la saturación según el fondo */
+:root,
+[data-bs-theme="light"] {
+  --nb-neb-azul: 70, 100, 235;
+  --nb-neb-violeta: 125, 85, 245;
+  --nb-neb-magenta: 215, 80, 170;
+  --nb-neb-cian: 25, 150, 195;
+  --nb-neb-ambar: 235, 150, 60;
+  --nb-neb-coral: 230, 100, 70;
+  --nb-neb-luz: 200, 70, 170; /* en claro, un magenta intenso (el blanco no se vería) */
+  --nb-neb-intensidad: 0.85;
+
+  --nb-estrella: 27, 33, 64;
+  --nb-estrella-brillo: 0 0 4px rgba(27, 33, 64, 0.25);
+  --nb-polvo: rgba(27, 33, 64, 0.3);
+  --nb-grano-opacidad: 0.05;
+}
+
+[data-bs-theme="dark"] {
+  --nb-neb-azul: 108, 140, 255;
+  --nb-neb-violeta: 160, 123, 255;
+  --nb-neb-magenta: 240, 101, 196;
+  --nb-neb-cian: 90, 209, 240;
+  --nb-neb-ambar: 255, 194, 122;
+  --nb-neb-coral: 255, 122, 89;
+  --nb-neb-luz: 250, 215, 245; /* rosado casi blanco, como el centro de la referencia */
+  --nb-neb-intensidad: 1;
+
+  --nb-estrella: 244, 246, 255;
+  --nb-estrella-brillo: 0 0 6px 1px rgba(200, 215, 255, 0.55);
+  --nb-polvo: rgba(255, 255, 255, 0.5);
+  --nb-grano-opacidad: 0.07;
+}
+
+/* ---------- Contenedor: ocupa toda la pantalla, debajo de la navbar ---------- */
+.nb-inicio {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  background-color: var(--nb-fondo);
+}
+
+/* ---------- Nebulosa ---------- */
+.nb-nebulosa {
+  position: absolute;
+  inset: 0;
+  /* Polvo de estrellas lejanas: puntos fijos de 1px, se dibujan una sola vez */
+  background-image:
+    radial-gradient(1px 1px at 23px 41px, var(--nb-polvo), transparent),
+    radial-gradient(1px 1px at 141px 97px, var(--nb-polvo), transparent),
+    radial-gradient(1px 1px at 87px 173px, var(--nb-polvo), transparent),
+    radial-gradient(1px 1px at 199px 211px, var(--nb-polvo), transparent),
+    radial-gradient(1px 1px at 251px 29px, var(--nb-polvo), transparent);
+  background-size: 280px 260px;
+}
+
+/* ---------- Nubes ---------- */
+/* Cada nube es una mancha enorme con una caída muy gradual hasta transparente
+   (varios cortes intermedios en vez de uno solo): así no se ve ningún borde.
+   Cada nube define su color (--c), su opacidad (--a), dónde está y cómo deriva. */
+.nb-nube {
+  position: absolute;
+  left: var(--x);
+  top: var(--y);
+  width: var(--ancho);
+  height: var(--alto);
+  pointer-events: none;
+  --a-final: calc(var(--a) * var(--nb-neb-intensidad));
+  background: radial-gradient(
+    closest-side,
+    rgba(var(--c), var(--a-final)) 0%,
+    rgba(var(--c), calc(var(--a-final) * 0.62)) 30%,
+    rgba(var(--c), calc(var(--a-final) * 0.3)) 55%,
+    rgba(var(--c), calc(var(--a-final) * 0.1)) 78%,
+    transparent 100%
+  );
+  transform: translate(-50%, -50%) rotate(var(--giro, 0deg));
+  animation: nb-deriva var(--duracion) ease-in-out infinite alternate;
+}
+
+/* Fondo de azul profundo, abajo a la izquierda */
+.nb-nube-azul {
+  --c: var(--nb-neb-azul);
+  --a: 0.55;
+  --x: 22%;
+  --y: 72%;
+  --ancho: 100vmax;
+  --alto: 80vmax;
+  --dx: 12vmax;
+  --dy: -8vmax;
+  --escala: 1.18;
+  --duracion: 30s;
+}
+
+/* Violeta, arriba a la derecha */
+.nb-nube-violeta {
+  --c: var(--nb-neb-violeta);
+  --a: 0.5;
+  --x: 76%;
+  --y: 28%;
+  --ancho: 100vmax;
+  --alto: 70vmax;
+  --dx: -11vmax;
+  --dy: 8vmax;
+  --escala: 1.2;
+  --duracion: 27s;
+}
+
+/* Un toque de cian que cruza por el medio */
+.nb-nube-cian {
+  --c: var(--nb-neb-cian);
+  --a: 0.22;
+  --x: 62%;
+  --y: 62%;
+  --ancho: 60vmax;
+  --alto: 40vmax;
+  --dx: -14vmax;
+  --dy: -7vmax;
+  --escala: 1.3;
+  --duracion: 34s;
+}
+
+/* La banda diagonal, como el brazo de la galaxia de la referencia */
+.nb-nube-banda {
+  --c: var(--nb-neb-magenta);
+  --a: 0.45;
+  --x: 50%;
+  --y: 50%;
+  --ancho: 140vmax;
+  --alto: 34vmax;
+  --giro: -16deg;
+  --dx: 7vmax;
+  --dy: 5vmax;
+  --escala: 1.14;
+  --duracion: 21s;
+}
+
+/* El núcleo luminoso, dentro de la banda */
+.nb-nube-brillo {
+  --c: var(--nb-neb-luz);
+  --a: 0.5;
+  --x: 48%;
+  --y: 50%;
+  --ancho: 70vmax;
+  --alto: 16vmax;
+  --giro: -16deg;
+  --dx: -5vmax;
+  --dy: 3vmax;
+  --escala: 1.3;
+  --duracion: 17s;
+}
+
+/* Ida y vuelta: se corre y se estira apenas, sin girar */
+@keyframes nb-deriva {
+  to {
+    transform: translate(-50%, -50%) rotate(var(--giro, 0deg))
+      translate(var(--dx), var(--dy)) scale(var(--escala));
+  }
+}
+
+/* Grano fino encima de todo: suaviza los degradados y da textura "imperfecta".
+   Es una imagen fija: el navegador la dibuja una sola vez */
+.nb-nebulosa-grano {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: var(--nb-grano-opacidad);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 160px 160px;
+}
+
+/* ---------- Párrafo de bienvenida ---------- */
+.nb-intro {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  z-index: 2;
+  width: min(32rem, 85vw);
+  margin: 0;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  font-size: 1.25rem;
+  font-weight: 300;
+  line-height: 1.6;
+  color: var(--nb-texto);
+  pointer-events: none; /* no tapa los clicks a las estrellas */
+  opacity: 0;
+  animation: nb-intro 8s ease-in-out 0.3s forwards;
+}
+
+/* Entra en ~1 s, queda ~5 s para leerse y sale en ~1,5 s */
+@keyframes nb-intro {
+  0% {
+    opacity: 0;
+  }
+  13% {
+    opacity: 1;
+  }
+  78% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    visibility: hidden;
+  }
+}
+
+.nb-inicio-aviso {
+  position: absolute;
+  bottom: 2rem;
+  left: 50%;
+  z-index: 2;
+  margin: 0;
+  transform: translateX(-50%);
+  text-align: center;
+}
+
+/* ---------- Mapa de estrellas ---------- */
+.nb-mapa {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+}
+
+/* Cada estrella es un enlace con un área de click cómoda, más grande que el punto */
+.nb-estrella {
+  position: absolute;
+  display: grid;
+  place-items: center;
+  width: 2rem;
+  height: 2rem;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  text-decoration: none;
+}
+
+.nb-estrella:focus-visible {
+  outline: 2px solid rgb(var(--nb-azul-rgb));
+  outline-offset: 2px;
+}
+
+/* El titileo no se detiene nunca, ni con hover: cada estrella tiene su propio
+   ritmo, amplitud y brillo mínimo, como si estuvieran a distintas distancias */
+.nb-estrella-punto {
+  display: block;
+  width: var(--nb-tamano);
+  height: var(--nb-tamano);
+  border-radius: 50%;
+  background: rgb(var(--nb-estrella));
+  box-shadow: var(--nb-estrella-brillo); /* fijo: no se anima */
+  animation: nb-titilar var(--nb-duracion, 4s) ease-in-out var(--nb-retraso, 0s) infinite alternate;
+}
+
+/* Tres tamaños según la prioridad */
+.nb-estrella-alta {
+  --nb-tamano: 18px;
+}
+.nb-estrella-media {
+  --nb-tamano: 11px;
+}
+.nb-estrella-baja {
+  --nb-tamano: 6px;
+}
+
+/* Completadas: estrellas que ya se consumieron. Siguen titilando, pero apagadas */
+.nb-estrella-completada .nb-estrella-punto {
+  background: rgba(var(--nb-estrella), 0.3);
+  box-shadow: none;
+}
+
+@keyframes nb-titilar {
+  from {
+    opacity: var(--nb-opacidad-min, 0.5);
+    transform: scale(var(--nb-escala-min, 0.7));
+  }
+  to {
+    opacity: 1;
+    transform: scale(var(--nb-escala-max, 1.25));
+  }
+}
+
+/* El título: invisible hasta el hover o el foco */
+.nb-estrella-titulo {
+  position: absolute;
+  bottom: calc(100% + 0.15rem);
+  left: 50%;
+  max-width: 16rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 0.95rem;
+  color: var(--nb-texto);
+  opacity: 0;
+  transform: translate(-50%, 0.25rem);
+  transition:
+    opacity 0.2s ease,
+    transform 0.2s ease;
+  pointer-events: none;
+}
+
+/* El título de las completadas, gris como su punto */
+.nb-estrella-completada .nb-estrella-titulo {
+  color: rgba(var(--nb-estrella), 0.45);
+}
+
+.nb-estrella:focus-visible .nb-estrella-titulo {
+  opacity: 1;
+  transform: translate(-50%, 0);
+}
+
+/* Solo en dispositivos con mouse: en táctil el toque abre el detalle directo */
+@media (hover: hover) {
+  .nb-estrella:hover .nb-estrella-titulo {
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
+}
+
+/* ---------- Movimiento reducido ---------- */
+@media (prefers-reduced-motion: reduce) {
+  .nb-nube,
+  .nb-estrella-punto {
+    animation: none;
+  }
+
+  .nb-estrella-titulo {
+    transition: none;
+  }
+}
